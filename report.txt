@@ -1,0 +1,30 @@
+-Below is a table with the results of time it took to run the three different malloc versions on ivec and a list.
+ The time is in seconds and each malloc implementation was run in a collatz program with argument 10,000.
+	+-------+-----+-----+------+
+	|       | hw7 | par | sys  |
+	+-------+-----+-----+------+
+	| ivec  | .18 |   --|  .04 |
+	| list  | .20 |  .03|  .11 |
+	+-------+-----+-----+------+
+
+-Hardware Info:
+	Virtual Machine:
+  	- OS: Xubuntu 18.04
+  	- Processor Model: AMD Ryzen 5 2600X Six-Core Processor
+  	- Number of Cores: 6
+  	- RAM: 16 GB
+
+The strategy used to create a new optimized allocator was the bucket strategy. This strategy works by having a
+size specific free list, often described as "buckets". The size of the buckets were powers of 2 and points
+between those powers. When there is an allocation a new block of memory is put on the bucket asscosiated with
+the given size. 
+
+To make this strategy thread safe, per-thread arenas were implemented. The arena refered to the main bucket
+data structure, and each thread had its own. Each arena had its own mutex for cases were there was a malloc in
+one thread and a free in another. 
+
+
+This strategy did beat the system allocator slighty, but only for the linked list test. The new memory allocator
+did not work properly with the ivec class, hence there is no value for its speed in the table above.
+This new program was able to perform better than the simple memory allocator from the previous
+assignment. 
